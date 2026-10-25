@@ -84,7 +84,9 @@ function valid(p){
   out.appendChild(el("p","name",p.name));
   out.appendChild(el("p","pos",p.position));
   var dl=el("dl");
-  [["ID No.",p.id_no],["Valid until",fmt(p.valid_until)]].forEach(function(r){var d=el("div");d.appendChild(el("dt",null,r[0]));d.appendChild(el("dd",null,r[1]));dl.appendChild(d);});
+  var rows=[["ID No.",p.id_no]];
+  if(p.valid_until)rows.push(["Valid until",fmt(p.valid_until)]);
+  rows.forEach(function(r){var d=el("div");d.appendChild(el("dt",null,r[0]));d.appendChild(el("dd",null,r[1]));dl.appendChild(d);});
   out.appendChild(dl);
   var b=el("div","badge ok","VALID");b.appendChild(el("small",null,"ACTIVE EMPLOYEE"));out.appendChild(b);
   stamp();
@@ -114,7 +116,7 @@ async function run(){
     var p=JSON.parse(new TextDecoder().decode(pt));
     if(p.status==="suspended"){bad("SUSPENDED","NOT CURRENTLY AUTHORIZED","This ID is currently suspended. Do not accept it as proof of employment.");return;}
     if(p.status!=="active"){bad("INVALID","NOT VERIFIED");return;}
-    if(!/^\d{4}-\d{2}-\d{2}$/.test(p.valid_until||"")||p.valid_until<todayISO()){bad("INVALID / EXPIRED","ID VALIDITY HAS ENDED");return;}
+    if(p.valid_until&&(!/^\d{4}-\d{2}-\d{2}$/.test(p.valid_until)||p.valid_until<todayISO())){bad("INVALID / EXPIRED","ID VALIDITY HAS ENDED");return;}
     valid(p);
   }catch(e){
     bad("INVALID","COULD NOT VERIFY","This ID could not be verified. Check your connection and scan again.");
