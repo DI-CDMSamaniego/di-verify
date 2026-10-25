@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<title>ID Verification · D.I Engineering Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@200;300;400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#fff;color:#000}
+body{font-family:"Josefin Sans","Century Gothic","Avenir Next",Helvetica,Arial,sans-serif;font-weight:300;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+header{width:100%;background:#000;display:flex;justify-content:center;padding:8px 0 0}
+.logo{width:min(62vw,240px);height:auto;display:block}
+main{width:100%;max-width:440px;padding:24px 20px 32px;flex:1}
+.label{font-size:11px;letter-spacing:.32em;text-transform:uppercase;text-align:center;margin-bottom:20px}
+.card{border:1px solid #000;padding:24px 20px;text-align:center}
+.photo{width:150px;height:180px;object-fit:cover;border:1px solid #000;display:block;margin:0 auto 20px;filter:grayscale(100%)}
+.name{font-size:24px;font-weight:400;letter-spacing:.06em;text-transform:uppercase;line-height:1.2}
+.pos{font-size:14px;letter-spacing:.18em;text-transform:uppercase;margin-top:8px}
+dl{margin:22px 0 0;border-top:1px solid #000}
+dl div{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #000;font-size:14px}
+dt{letter-spacing:.2em;text-transform:uppercase;font-size:11px;padding-top:2px}
+dd{font-weight:400;letter-spacing:.06em;text-align:right;word-break:break-all}
+.badge{margin-top:24px;padding:18px 8px;font-size:30px;font-weight:600;letter-spacing:.18em;line-height:1.15;border:1px solid #000}
+.badge.ok{background:#000;color:#fff}
+.badge.bad{background:#fff;color:#000;border-width:3px}
+.badge small{display:block;font-size:12px;font-weight:300;letter-spacing:.3em;margin-top:6px}
+.msg{font-size:15px;line-height:1.6;letter-spacing:.04em;margin-top:16px}
+.muted{font-size:11px;letter-spacing:.2em;text-transform:uppercase;text-align:center;margin-top:24px;line-height:1.7}
+.scan{width:64px;height:64px;margin:6px auto 18px;display:block}
+footer{width:100%;text-align:center;font-size:10px;letter-spacing:.3em;padding:16px;border-top:1px solid #000;text-transform:uppercase}
+</style>
+</head>
+<body>
+<header><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 860" role="img" aria-label="D.I Engineering Services logo" class="logo"><rect width="1024" height="860" fill="#000"/><g transform="translate(-40,0)" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="miter" stroke-linecap="square">
+<polyline points="415,430 415,110 610,110 655,155 655,168"/>
+<polyline points="655,212 655,485 610,530 415,530"/>
+<line x1="565" y1="190" x2="675" y2="190"/>
+<polyline points="610,190 610,512"/>
+<polyline points="610,548 610,580"/>
+<line x1="565" y1="580" x2="675" y2="580"/></g>
+<text x="512" y="700" text-anchor="middle" fill="#fff" font-family="Josefin Sans, Century Gothic, Avenir Next, Helvetica, Arial, sans-serif" font-weight="300" font-size="40" letter-spacing="14">D.I ENGINEERING</text>
+<line x1="270" y1="742" x2="360" y2="742" stroke="#9e9e9e" stroke-width="1.5"/><line x1="664" y1="742" x2="754" y2="742" stroke="#9e9e9e" stroke-width="1.5"/>
+<text x="512" y="750" text-anchor="middle" fill="#bdbdbd" font-family="Josefin Sans, Century Gothic, Avenir Next, Helvetica, Arial, sans-serif" font-weight="300" font-size="24" letter-spacing="10">SERVICES</text></svg></header>
+<main>
+  <p class="label">Employee ID Verification</p>
+  <section class="card" id="out" aria-live="polite"><p class="msg">Checking&hellip;</p></section>
+  <p class="muted" id="checked"></p>
+</main>
+<footer>D.I Engineering Services</footer>
+<noscript><p style="text-align:center;padding:16px">JavaScript is required to verify an ID.</p></noscript>
+<script>
+(function(){
+"use strict";
+var SALT="DI-VERIFY-v1-salt", INFO="DI-VERIFY-v1 aes-256-gcm key";
+var out=document.getElementById("out"), enc=new TextEncoder();
+
+function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e;}
+function clear(){while(out.firstChild)out.removeChild(out.firstChild);}
+function todayISO(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function fmt(iso){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(iso||"");if(!m)return iso||"";var M=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];return m[3]+" "+M[+m[2]-1]+" "+m[1];}
+function stamp(){var d=new Date();document.getElementById("checked").textContent="Checked "+fmt(todayISO())+" "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");}
+
+function bad(title,sub,msg){
+  clear();
+  var b=el("div","badge bad",title); if(sub){b.appendChild(el("small",null,sub));}
+  out.appendChild(b);
+  out.appendChild(el("p","msg",msg||"This ID could not be verified. Do not accept it as proof of employment."));
+  stamp();
+}
+function neutral(){
+  clear();
+  out.insertAdjacentHTML("beforeend",'<svg class="scan" viewBox="0 0 64 64" fill="none" stroke="#000" stroke-width="1.5"><path d="M4 20V4h16M44 4h16v16M60 44v16H44M20 60H4V44"/><rect x="18" y="18" width="10" height="10"/><rect x="36" y="18" width="10" height="10"/><rect x="18" y="36" width="10" height="10"/><path d="M36 36h4v4h-4zM42 42h4v4h-4z"/></svg>');
+  out.appendChild(el("p","name","Scan an ID QR code"));
+  out.appendChild(el("p","msg","Use your phone camera to scan the QR code on a D.I Engineering Services employee ID card to check if it is valid."));
+}
+function valid(p){
+  clear();
+  if(p.photo&&/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(p.photo)){var img=el("img","photo");img.alt="Employee photo";img.src=p.photo;out.appendChild(img);}
+  out.appendChild(el("p","name",p.name));
+  out.appendChild(el("p","pos",p.position));
+  var dl=el("dl");
+  [["ID No.",p.id_no],["Valid until",fmt(p.valid_until)]].forEach(function(r){var d=el("div");d.appendChild(el("dt",null,r[0]));d.appendChild(el("dd",null,r[1]));dl.appendChild(d);});
+  out.appendChild(dl);
+  var b=el("div","badge ok","VALID");b.appendChild(el("small",null,"ACTIVE EMPLOYEE"));out.appendChild(b);
+  stamp();
+}
+
+function b64ToBytes(s){var bin=atob(s),u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return u;}
+function hex(buf){return Array.prototype.map.call(new Uint8Array(buf),function(x){return x.toString(16).padStart(2,"0");}).join("");}
+
+async function run(){
+  var t=new URLSearchParams(location.search).get("t");
+  if(t===null){neutral();return;}
+  t=t.trim();
+  if(!/^[A-Za-z0-9_-]{24,128}$/.test(t)){bad("INVALID","NOT VERIFIED");return;}
+  if(!(window.crypto&&crypto.subtle)){bad("ERROR",null,"This browser cannot verify IDs. Please open the link in an up-to-date browser (HTTPS required).");return;}
+  try{
+    var tb=enc.encode(t);
+    var lookup=hex(await crypto.subtle.digest("SHA-256",tb));
+    var res=await fetch("data.json",{cache:"no-store"});
+    if(!res.ok)throw new Error("fetch");
+    var data=await res.json(), entry=null;
+    for(var i=0;i<data.length;i++){if(data[i].lookup===lookup){entry=data[i];break;}}
+    if(!entry){bad("INVALID","NOT FOUND OR NO LONGER EMPLOYED");return;}
+    var ikm=await crypto.subtle.importKey("raw",tb,"HKDF",false,["deriveKey"]);
+    var key=await crypto.subtle.deriveKey({name:"HKDF",hash:"SHA-256",salt:enc.encode(SALT),info:enc.encode(INFO)},ikm,{name:"AES-GCM",length:256},false,["decrypt"]);
+    var raw=b64ToBytes(entry.blob);
+    var pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:raw.slice(0,12)},key,raw.slice(12));
+    var p=JSON.parse(new TextDecoder().decode(pt));
+    if(p.status==="suspended"){bad("SUSPENDED","NOT CURRENTLY AUTHORIZED","This ID is currently suspended. Do not accept it as proof of employment.");return;}
+    if(p.status!=="active"){bad("INVALID","NOT VERIFIED");return;}
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(p.valid_until||"")||p.valid_until<todayISO()){bad("INVALID / EXPIRED","ID VALIDITY HAS ENDED");return;}
+    valid(p);
+  }catch(e){
+    bad("INVALID","COULD NOT VERIFY","This ID could not be verified. Check your connection and scan again.");
+  }
+}
+run();
+})();
+</script>
+</body>
+</html>
