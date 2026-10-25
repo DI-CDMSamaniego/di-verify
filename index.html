@@ -114,7 +114,7 @@ async function run(){
     var raw=b64ToBytes(entry.blob);
     var pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:raw.slice(0,12)},key,raw.slice(12));
     var p=JSON.parse(new TextDecoder().decode(pt));
-    if(p.status==="suspended"){bad("SUSPENDED","NOT CURRENTLY AUTHORIZED","This ID is currently suspended. Do not accept it as proof of employment.");return;}
+    if(p.status==="suspended"){bad("INVALID","INACTIVE","This ID is not currently active. Do not accept it as proof of employment.");return;}
     if(p.status!=="active"){bad("INVALID","NOT VERIFIED");return;}
     if(p.valid_until&&(!/^\d{4}-\d{2}-\d{2}$/.test(p.valid_until)||p.valid_until<todayISO())){bad("INVALID / EXPIRED","ID VALIDITY HAS ENDED");return;}
     valid(p);
