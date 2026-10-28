@@ -30,6 +30,8 @@ dd{font-weight:400;letter-spacing:.06em;text-align:right;word-break:break-all}
 .badge.bad{background:#fff;color:#000;border-width:3px}
 .badge small{display:block;font-size:12px;font-weight:300;letter-spacing:.3em;margin-top:6px}
 .msg{font-size:15px;line-height:1.6;letter-spacing:.04em;margin-top:16px}
+.portal{display:block;margin-top:16px;padding:16px 8px;border:2px solid #000;background:#fff;color:#000;text-decoration:none;font-size:15px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+.portal:hover,.portal:focus{background:#000;color:#fff}
 .muted{font-size:11px;letter-spacing:.2em;text-transform:uppercase;text-align:center;margin-top:24px;line-height:1.7}
 .scan{width:64px;height:64px;margin:6px auto 18px;display:block}
 footer{width:100%;text-align:center;font-size:10px;letter-spacing:.3em;padding:16px;border-top:1px solid #000;text-transform:uppercase}
@@ -97,6 +99,11 @@ function valid(p){
   rows.forEach(function(r){var d=el("div");d.appendChild(el("dt",null,r[0]));d.appendChild(el("dd",null,r[1]));dl.appendChild(d);});
   out.appendChild(dl);
   var b=el("div","badge ok","VALID");b.appendChild(el("small",null,"ACTIVE EMPLOYEE"));out.appendChild(b);
+  if(p.status==="active"&&typeof p.portal==="string"&&/^[A-Za-z0-9_-]{24,128}$/.test(p.portal)){
+    var a=el("a","portal","View my ID & certificates \u2192");
+    a.href="me/?t="+encodeURIComponent(p.portal);a.rel="noreferrer";a.id="portal-link";
+    out.appendChild(a);
+  }
   stamp();
 }
 
