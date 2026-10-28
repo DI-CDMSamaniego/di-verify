@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
-<title>My ID, Other IDs &amp; Certificates · D.I Engineering Services</title>
+<title>My ID, Government IDs &amp; Certificates · D.I Engineering Services</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
@@ -33,6 +33,12 @@ figcaption{font-size:11px;letter-spacing:.25em;text-transform:uppercase;text-ali
 .cert .d{font-size:11px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px}
 .cert img{width:100%;height:auto;display:block;border:1px solid #000;margin-bottom:10px}
 .row{display:flex;gap:8px}
+.gov{border:1px solid #000}
+.gov .g{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:11px 12px;border-top:1px solid #000}
+.gov .g:first-child{border-top:0}
+.gov .k{font-size:11px;letter-spacing:.2em;text-transform:uppercase;flex:0 0 auto}
+.gov .v{font-size:15px;font-weight:400;letter-spacing:.04em;text-align:right;word-break:break-word}
+.gov .x{display:block;font-size:10px;letter-spacing:.18em;text-transform:uppercase;margin-top:4px}
 .empty{font-size:14px;letter-spacing:.06em;text-align:center;padding:22px 10px;border:1px dashed #000}
 .box{border:3px solid #000;padding:26px 16px;text-align:center}
 .box .b{font-size:24px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
@@ -55,7 +61,7 @@ footer{width:100%;text-align:center;font-size:10px;letter-spacing:.3em;padding:1
 <text x="512" y="750" text-anchor="middle" fill="#bdbdbd" font-family="Josefin Sans, Century Gothic, Avenir Next, Helvetica, Arial, sans-serif" font-weight="300" font-size="24" letter-spacing="10">SERVICES</text></svg></header>
 <main>
   <h1>D.I Engineering Services</h1>
-  <p class="label">My ID, Other IDs &amp; Certificates</p>
+  <p class="label">My ID, Government IDs &amp; Certificates</p>
   <div id="out" aria-live="polite"><p class="msg" style="text-align:center">Loading&hellip;</p></div>
 </main>
 <footer>D.I Engineering Services &middot; Private page</footer>
@@ -101,6 +107,19 @@ async function section(title,items,emptyText,def){
   var wrap=el("div");out.appendChild(wrap);
   for(var i=0;i<items.length;i++){wrap.appendChild(await certCard(items[i],def));}
 }
+function govSection(items){
+  out.appendChild(el("h2",null,"Government IDs"));
+  items=items.filter(function(x){return x&&typeof x.l==="string"&&typeof x.v==="string"&&x.l&&x.v;});
+  if(!items.length){out.appendChild(el("p","empty","No government IDs yet"));return;}
+  var w=el("div","gov");
+  for(var i=0;i<items.length;i++){
+    var r=el("div","g");r.appendChild(el("span","k",items[i].l));
+    var v=el("span","v",items[i].v);
+    if(typeof items[i].x==="string"&&items[i].x)v.appendChild(el("span","x","Valid until "+items[i].x));
+    r.appendChild(v);w.appendChild(r);
+  }
+  out.appendChild(w);
+}
 async function show(p){
   clear();
   var w=el("div","who");w.appendChild(el("p","n",p.name||""));w.appendChild(el("p","i","ID No. "+(p.id_no||"")));out.appendChild(w);
@@ -110,6 +129,7 @@ async function show(p){
   if(okImg(p.back))g.appendChild(idFig(p.back,"Back",(p.id_no||"ID")+" ID Back.jpg"));
   if(!g.firstChild)g.appendChild(el("p","empty","ID card image not available yet"));
   out.appendChild(g);
+  govSection(Array.isArray(p.gov)?p.gov:[]);  /* no "gov" = older payload = none */
   var cs=Array.isArray(p.certs)?p.certs:[], ids=[], certs=[];
   for(var i=0;i<cs.length;i++){(cs[i]&&cs[i].cat==="cert"?certs:ids).push(cs[i]);}  /* no "cat" = old item = Other IDs */
   await section("Other IDs",ids,"No other IDs yet","ID");
