@@ -21,6 +21,8 @@ h1{font-size:22px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
 .who{text-align:center;margin-bottom:22px}
 .who .n{font-size:20px;font-weight:400;letter-spacing:.05em;text-transform:uppercase}
 .who .i{font-size:12px;letter-spacing:.25em;margin-top:6px}
+.det{display:inline-block;margin-top:10px;border:1px solid #000;padding:6px 12px;font-size:13px;letter-spacing:.04em;max-width:100%;word-break:break-all}
+.det .k{font-size:10px;letter-spacing:.25em;text-transform:uppercase;margin-right:8px}
 h2{font-size:12px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;border-bottom:1px solid #000;padding-bottom:8px;margin:26px 0 14px}
 .ids{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 figure{border:1px solid #000;padding:8px;display:flex;flex-direction:column}
@@ -122,7 +124,9 @@ function govSection(items){
 }
 async function show(p){
   clear();
-  var w=el("div","who");w.appendChild(el("p","n",p.name||""));w.appendChild(el("p","i","ID No. "+(p.id_no||"")));out.appendChild(w);
+  var w=el("div","who");w.appendChild(el("p","n",p.name||""));w.appendChild(el("p","i","ID No. "+(p.id_no||"")));
+  if(typeof p.email==="string"&&p.email){var d=el("div","det");d.appendChild(el("span","k","Email"));d.appendChild(el("span","v",p.email));w.appendChild(d);}  /* no "email" = none shown */
+  out.appendChild(w);
   out.appendChild(el("h2",null,"My ID Card"));
   var g=el("div","ids");
   if(okImg(p.front))g.appendChild(idFig(p.front,"Front",(p.id_no||"ID")+" ID Front.jpg"));
